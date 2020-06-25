@@ -1,12 +1,12 @@
 <template>
-  <div class="container">
+  <div class="container" id="global-data-container">
     <h2>Covid19 Global Data Table</h2>
     <table
       class="table table-striped table-bordered table-sm"
       cellspacing="0"
       id="global-data"
     >
-      <thead id="global_header">
+      <thead id="global_table_header">
         <tr>
           <th scope="col">Location</th>
           <th scope="col">NewConfirmed</th>
@@ -89,10 +89,10 @@ export default {
 </script>
 
 <style>
-#global_header {
+#global_table_header {
   background: rgba(0, 123, 255, 0.5);
 }
-.container {
+#global-data-container {
   margin-left: 50px;
 }
 </style>
