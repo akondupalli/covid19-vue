@@ -1,0 +1,4 @@
+{
+  "globalData": "https://api.covid19api.com/summary",
+  "usData": "https://covidtracking.com/api/states"
+}

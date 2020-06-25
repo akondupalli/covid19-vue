@@ -9,7 +9,7 @@
       <span class="sr-only">Loading...</span>
     </div>
     <div class="error" v-else-if="errored === true">
-      <p>Server Error!</p>
+      <p>{{ errorDetails }}</p>
     </div>
     <div v-else>
       <table
@@ -40,6 +40,7 @@
 
 <script>
 import axios from "axios";
+import covid19api from "../assets/json/covid19-api.json";
 export default {
   name: "Covid19USDataTable",
   data: function () {
@@ -47,6 +48,7 @@ export default {
       states: "",
       loading: false,
       errored: false,
+      errorDetails: "unknown server error",
     };
   },
   // life cycle function
@@ -57,12 +59,13 @@ export default {
     makeAPIRequest: function () {
       this.loading = true;
       axios
-        .get("https://covidtracking.com/api/states")
+        .get(covid19api.usData)
         .then((res) => {
           this.states = res.data;
         })
         .catch((error) => {
           console.log(error);
+          this.errorDetails = error;
           this.errored = true;
         })
         .finally(() => (this.loading = false));
