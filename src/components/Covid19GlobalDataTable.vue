@@ -1,43 +1,55 @@
 <template>
   <div class="container" id="global-data-container">
     <h2>Covid19 Global Data Table</h2>
-    <table
-      class="table table-striped table-bordered table-sm"
-      cellspacing="0"
-      id="global-data"
+    <div
+      class="spinner-border text-primary"
+      role="status"
+      v-if="loading === true"
     >
-      <thead id="global_table_header">
-        <tr>
-          <th scope="col">Location</th>
-          <th scope="col">NewConfirmed</th>
-          <th scope="col">TotalConfirmed</th>
-          <th scope="col">NewDeaths</th>
-          <th scope="col">TotalDeaths</th>
-          <th scope="col">NewRecovered</th>
-          <th scope="col">TotalRecovered</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="table-warning">
-          <th scope="row">{{ dataType }}</th>
-          <td>{{ summary.NewConfirmed }}</td>
-          <td>{{ summary.TotalConfirmed }}</td>
-          <td>{{ summary.NewDeaths }}</td>
-          <td>{{ summary.TotalDeaths }}</td>
-          <td>{{ summary.NewRecovered }}</td>
-          <td>{{ summary.TotalRecovered }}</td>
-        </tr>
-        <tr v-for="countryObj in countries" v-bind:key="countryObj.Country">
-          <th scope="row">{{ countryObj.Country }}</th>
-          <td>{{ countryObj.NewConfirmed }}</td>
-          <td>{{ countryObj.TotalConfirmed }}</td>
-          <td>{{ countryObj.NewDeaths }}</td>
-          <td>{{ countryObj.TotalDeaths }}</td>
-          <td>{{ countryObj.NewRecovered }}</td>
-          <td>{{ countryObj.TotalRecovered }}</td>
-        </tr>
-      </tbody>
-    </table>
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div class="error" v-else-if="errored === true">
+      <p>Server Error!</p>
+    </div>
+    <div v-else>
+      <table
+        class="table table-striped table-bordered table-sm"
+        cellspacing="0"
+        id="global-data"
+      >
+        <thead id="global_table_header">
+          <tr>
+            <th scope="col">Location</th>
+            <th scope="col">NewConfirmed</th>
+            <th scope="col">TotalConfirmed</th>
+            <th scope="col">NewDeaths</th>
+            <th scope="col">TotalDeaths</th>
+            <th scope="col">NewRecovered</th>
+            <th scope="col">TotalRecovered</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-warning">
+            <th scope="row">{{ dataType }}</th>
+            <td>{{ summary.NewConfirmed }}</td>
+            <td>{{ summary.TotalConfirmed }}</td>
+            <td>{{ summary.NewDeaths }}</td>
+            <td>{{ summary.TotalDeaths }}</td>
+            <td>{{ summary.NewRecovered }}</td>
+            <td>{{ summary.TotalRecovered }}</td>
+          </tr>
+          <tr v-for="countryObj in countries" v-bind:key="countryObj.Country">
+            <th scope="row">{{ countryObj.Country }}</th>
+            <td>{{ countryObj.NewConfirmed }}</td>
+            <td>{{ countryObj.TotalConfirmed }}</td>
+            <td>{{ countryObj.NewDeaths }}</td>
+            <td>{{ countryObj.TotalDeaths }}</td>
+            <td>{{ countryObj.NewRecovered }}</td>
+            <td>{{ countryObj.TotalRecovered }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -50,6 +62,8 @@ export default {
       summary: "",
       countries: "",
       dataType: "#Global",
+      loading: false,
+      errored: false,
     };
   },
   // life cycle function
@@ -58,6 +72,7 @@ export default {
   },
   methods: {
     makeAPIRequest: function () {
+      this.loading = true;
       axios
         .get("https://api.covid19api.com/summary")
         .then((res) => {
@@ -66,8 +81,9 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          this.errored = true;
         })
-        .finally(() => console.log("Api request is completed"));
+        .finally(() => (this.loading = false));
     },
   },
   watch: {

@@ -1,28 +1,40 @@
 <template>
   <div class="container" id="us-data-container">
     <h2>Covid19 US Data Table</h2>
-    <table
-      class="table table-striped table-bordered table-sm"
-      cellspacing="0"
-      id="us-data"
+    <div
+      class="spinner-border text-secondary"
+      role="status"
+      v-if="loading === true"
     >
-      <thead id="us_table_header">
-        <tr>
-          <th scope="col">State</th>
-          <th scope="col">Total Cases</th>
-          <th scope="col">Total Deaths</th>
-          <th scope="col">Total Recovered</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="stateObj in states" v-bind:key="stateObj.state">
-          <th scope="row">{{ stateObj.state }}</th>
-          <td>{{ stateObj.positive }}</td>
-          <td>{{ stateObj.death }}</td>
-          <td>{{ stateObj.recovered }}</td>
-        </tr>
-      </tbody>
-    </table>
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div class="error" v-else-if="errored === true">
+      <p>Server Error!</p>
+    </div>
+    <div v-else>
+      <table
+        class="table table-striped table-bordered table-sm"
+        cellspacing="0"
+        id="us-data"
+      >
+        <thead id="us_table_header">
+          <tr>
+            <th scope="col">State</th>
+            <th scope="col">Total Cases</th>
+            <th scope="col">Total Deaths</th>
+            <th scope="col">Total Recovered</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="stateObj in states" v-bind:key="stateObj.state">
+            <th scope="row">{{ stateObj.state }}</th>
+            <td>{{ stateObj.positive }}</td>
+            <td>{{ stateObj.death }}</td>
+            <td>{{ stateObj.recovered }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -33,6 +45,8 @@ export default {
   data: function () {
     return {
       states: "",
+      loading: false,
+      errored: false,
     };
   },
   // life cycle function
@@ -41,6 +55,7 @@ export default {
   },
   methods: {
     makeAPIRequest: function () {
+      this.loading = true;
       axios
         .get("https://covidtracking.com/api/states")
         .then((res) => {
@@ -48,8 +63,9 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          this.errored = true;
         })
-        .finally(() => console.log("Api request is completed"));
+        .finally(() => (this.loading = false));
     },
   },
   watch: {
