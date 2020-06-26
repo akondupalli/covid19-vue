@@ -20,12 +20,11 @@
         <thead id="global_table_header">
           <tr>
             <th scope="col">Location</th>
-            <th scope="col">NewConfirmed</th>
-            <th scope="col">TotalConfirmed</th>
-            <th scope="col">NewDeaths</th>
-            <th scope="col">TotalDeaths</th>
-            <th scope="col">NewRecovered</th>
-            <th scope="col">TotalRecovered</th>
+            <th scope="col">New Confirmed</th>
+            <th scope="col">Total Confirmed</th>
+            <th scope="col">Total Deaths</th>
+            <th scope="col">New Recovered</th>
+            <th scope="col">Total Recovered</th>
           </tr>
         </thead>
         <tbody>
@@ -33,7 +32,6 @@
             <th scope="row">{{ dataType }}</th>
             <td>{{ summary.NewConfirmed }}</td>
             <td>{{ summary.TotalConfirmed }}</td>
-            <td>{{ summary.NewDeaths }}</td>
             <td>{{ summary.TotalDeaths }}</td>
             <td>{{ summary.NewRecovered }}</td>
             <td>{{ summary.TotalRecovered }}</td>
@@ -42,7 +40,6 @@
             <th scope="row">{{ countryObj.Country }}</th>
             <td>{{ countryObj.NewConfirmed }}</td>
             <td>{{ countryObj.TotalConfirmed }}</td>
-            <td>{{ countryObj.NewDeaths }}</td>
             <td>{{ countryObj.TotalDeaths }}</td>
             <td>{{ countryObj.NewRecovered }}</td>
             <td>{{ countryObj.TotalRecovered }}</td>
