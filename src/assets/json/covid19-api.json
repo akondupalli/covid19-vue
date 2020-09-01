@@ -1,4 +1,5 @@
 {
   "globalData": "https://api.covid19api.com/summary",
-  "usData": "https://covidtracking.com/api/states"
+  "usData": "https://covidtracking.com/api/states",
+  "altUSData": "https://finnhub.io/api/v1/covid19/us"
 }

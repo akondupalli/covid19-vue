@@ -22,7 +22,8 @@
             <th scope="col">State</th>
             <th scope="col">Total Cases</th>
             <th scope="col">Total Deaths</th>
-            <th scope="col">Total Recovered</th>
+            <th scope="col" v-if="altApi === false">Total Recovered</th>
+            <th v-else>Last Updated</th>
           </tr>
         </thead>
         <tbody>
@@ -30,7 +31,10 @@
             <th scope="row">{{ stateObj.state }}</th>
             <td>{{ stateObj.positive }}</td>
             <td>{{ stateObj.death }}</td>
-            <td>{{ stateObj.recovered }}</td>
+            <td scope="col" v-if="altApi === false">
+              {{ stateObj.recovered }}
+            </td>
+            <td v-else>{{ stateObj.updated }}</td>
           </tr>
         </tbody>
       </table>
@@ -49,6 +53,7 @@ export default {
       loading: false,
       errored: false,
       errorDetails: "unknown server error",
+      altApi: false,
     };
   },
   // life cycle function
@@ -61,6 +66,23 @@ export default {
       axios
         .get(covid19api.usData)
         .then((res) => {
+          this.states = res.data;
+        })
+        .catch((error) => {
+          console.log(`initial request error ${error}`);
+          this.makeAlternateAPIRequest();
+        });
+    },
+    makeAlternateAPIRequest: function () {
+      this.loading = true;
+      axios
+        .get(covid19api.altUSData)
+        .then((res) => {
+          res.data.forEach((obj) => {
+            obj.positive = obj.case;
+            delete obj.case;
+          });
+          this.altApi = true;
           this.states = res.data;
         })
         .catch((error) => {
